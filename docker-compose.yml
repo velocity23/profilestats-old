@@ -20,5 +20,5 @@ services:
             - profilestats
 
 networks:
-    vanetapi:
+    profilestats:
         driver: bridge

@@ -6,7 +6,7 @@ services:
             dockerfile: Dockerfile
         image: profilestats
         container_name: profilestats-app
-        restart: unless-stopped
+        restart: always
         networks:
             - profilestats
         ports:
@@ -15,7 +15,7 @@ services:
     redis:
         image: redis:latest
         container_name: profilestats-redis
-        restart: unless-stopped
+        restart: always
         networks:
             - profilestats
 

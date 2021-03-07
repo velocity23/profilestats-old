@@ -71,8 +71,21 @@ namespace ProfileStats.Api.Controllers
                 _redis.SetObject("flights", flights, TimeSpan.FromMinutes(10));
             }
 
-            var status = "Not Flying";
+            var atc = await _redis.GetObject<List<AtcEntry>>("atc");
+            if (atc == default)
+            {
+                var atcSessions = new List<List<AtcEntry>>();
+                foreach (var s in sessions)
+                {
+                    atcSessions.Add(await Client.GetAtcFacilitiesAsync(s.Id));
+                }
+                atc = atcSessions.SelectMany(x => x).ToList();
+                _redis.SetObject("atc", atc, TimeSpan.FromMinutes(10));
+            }
+
+            var status = "Not Active";
             var flight = flights.FirstOrDefault(f => f.UserId.ToString() == uid);
+            var stations = atc.GroupBy(a => a.UserId).FirstOrDefault(g => g.Any(a => a.UserId.ToString() == uid));
             if (flight != default)
             {
                 try
@@ -110,6 +123,17 @@ namespace ProfileStats.Api.Controllers
                 catch
                 {
                     status = "Flying";
+                }
+            }
+            else if (stations != default && stations.Any())
+            {
+                if (stations.Any(s => s.AirportName == null))
+                {
+                    status = $"Controlling {string.Join(", ", stations.Select(s => s.Type.ToString()).ToArray())} ({Math.Round((DateTimeOffset.Now - stations.First().StartTime).TotalMinutes)}mins)";
+                }
+                else
+                {
+                    status = $"Controlling {stations.First().AirportName} {string.Join(", ", stations.Select(s => s.Type.ToString()).ToArray())} ({Math.Round((DateTimeOffset.Now - stations.First().StartTime).TotalMinutes)}mins)";
                 }
             }
 

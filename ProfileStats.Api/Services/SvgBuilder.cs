@@ -19,18 +19,18 @@ namespace ProfileStats.Api.Services
                 "</svg>";
         }
 
-        public static string FromData(string status, UserStats stats, string username)
+        public static string FromData(string status, UserStats stats, string username, string bg, string text)
         {
-            var content = $"<text x=\"0\" y=\"15\" class=\"bold\">Stats for {username}</text>" +
-                $"<text x=\"0\" y=\"35\">Online Flights: {stats.OnlineFlights}</text>" +
-                $"<text x=\"0\" y=\"55\">Grade: Grade {stats.Grade}</text>" +
-                $"<text x=\"0\" y=\"75\">Total XP: {stats.Xp}</text>" +
-                $"<text x=\"0\" y=\"95\">Landing Count: {stats.LandingCount}</text>" +
-                $"<text x=\"0\" y=\"115\">Total Flight Time: {stats.FlightTime}</text>" +
-                $"<text x=\"0\" y=\"135\">ATC Operations: {stats.AtcOperations}</text>" +
-                $"<text x=\"0\" y=\"155\">ATC Rank: {stats.AtcRank}</text>" +
-                $"<text x=\"0\" y=\"185\" class=\"bold\">Status: {status}</text>";
-            return Generate(content, "white", 200);
+            var content = $"<text x=\"5\" y=\"20\" class=\"bold\" fill=\"{text}\">Stats for {username}</text>" +
+                $"<text x=\"5\" y=\"40\" fill=\"{text}\">Online Flights: {stats.OnlineFlights:n}</text>" +
+                $"<text x=\"5\" y=\"60\" fill=\"{text}\">Grade: Grade {stats.Grade:n}</text>" +
+                $"<text x=\"5\" y=\"80\" fill=\"{text}\">Total XP: {stats.Xp:n}</text>" +
+                $"<text x=\"5\" y=\"100\" fill=\"{text}\">Landing Count: {stats.LandingCount:n}</text>" +
+                $"<text x=\"5\" y=\"120\" fill=\"{text}\">Total Flight Time: {stats.FlightTime}</text>" +
+                $"<text x=\"5\" y=\"140\" fill=\"{text}\">ATC Operations: {stats.AtcOperations:n}</text>" +
+                $"<text x=\"5\" y=\"160\" fill=\"{text}\">ATC Rank: {stats.AtcRank}</text>" +
+                $"<text x=\"5\" y=\"190\" class=\"bold\" fill=\"{text}\">Status: {status}</text>";
+            return Generate(content, bg, 200);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace ProfileStats.Api.Controllers
         }
 
         [HttpGet("{ifc}.svg")]
-        public async Task<IActionResult> Get([FromRoute, Required] string ifc)
+        public async Task<IActionResult> Get([FromRoute, Required] string ifc, [FromQuery] string bg = "white", string text = "black")
         {
             _redis.UseDatabse(RedisDatabase.NameIds);
             var uid = await _redis.GetString(ifc.ToLower());
@@ -48,7 +48,7 @@ namespace ProfileStats.Api.Controllers
             }
 
             _redis.UseDatabse(RedisDatabase.Responses);
-            var cached = await _redis.GetString(uid);
+            var cached = await _redis.GetString($"{uid}_{bg}_{text}");
             if (cached != default) return Content(cached, "image/svg+xml; charset=utf-8");
 
             _redis.UseDatabse(RedisDatabase.Misc);
@@ -124,17 +124,10 @@ namespace ProfileStats.Api.Controllers
             }
 
             _redis.UseDatabse(RedisDatabase.Responses);
-            var data = SvgBuilder.FromData(status, stats, ifc);
-            _redis.SetString(uid, data, TimeSpan.FromMinutes(5));
+            var data = SvgBuilder.FromData(status, stats, ifc, bg, text);
+            _redis.SetString($"{uid}_{bg}_{text}", data, TimeSpan.FromMinutes(10));
 
             return Content(data, "image/svg+xml; charset=utf-8");
-        }
-
-        [HttpGet("test.svg")]
-        public IActionResult Test()
-        {
-            var svg = SvgBuilder.Generate("<text x=\"0\" y=\"15\">Hello<tspan class=\"bold\">World!</tspan></text>", "white");
-            return Content(svg, "image/svg+xml; charset=utf-8");
         }
     }
 }

@@ -129,11 +129,11 @@ namespace ProfileStats.Api.Controllers
             {
                 if (stations.Any(s => s.AirportName == null))
                 {
-                    status = $"Controlling {string.Join(", ", stations.Select(s => s.Type.ToString()).ToArray())} ({Math.Round((DateTimeOffset.Now - stations.First().StartTime).TotalMinutes)}mins)";
+                    status = $"Controlling {string.Join(", ", stations.Select(s => s.Type.ToString()).ToArray())}";
                 }
                 else
                 {
-                    status = $"Controlling {stations.First().AirportName} {string.Join(", ", stations.Select(s => s.Type.ToString()).ToArray())} ({Math.Round((DateTimeOffset.Now - stations.First().StartTime).TotalMinutes)}mins)";
+                    status = $"Controlling {stations.First().AirportName} {string.Join(", ", stations.Select(s => s.Type.ToString()).ToArray())}";
                 }
             }
 

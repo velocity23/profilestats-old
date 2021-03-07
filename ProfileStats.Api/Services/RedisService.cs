@@ -63,5 +63,6 @@ namespace ProfileStats.Api.Services
         Responses,
         Stats,
         Misc,
+        FlightPlans,
     }
 }

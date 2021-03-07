@@ -77,7 +77,13 @@ namespace ProfileStats.Api.Controllers
             {
                 try
                 {
-                    var fpl = await flight.GetFlightPlan();
+                    _redis.UseDatabse(RedisDatabase.FlightPlans);
+                    var fpl = await _redis.GetObject<FlightPlanInfo>(flight.FlightId.ToString());
+                    if (fpl == default)
+                    {
+                        fpl = await flight.GetFlightPlan();
+                        _redis.SetObject(flight.FlightId.ToString(), fpl, TimeSpan.FromHours(24));
+                    }
                     if (fpl.Waypoints.Length < 2)
                     {
                         throw new Exception("Not Enough Waypoints");
